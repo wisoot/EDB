@@ -54,7 +54,7 @@ func (mutator *Mutator) Mutate(accountId uint, amount int, description string) (
 		return err
 	}
 
-	err = mutator.Repository.UpdateBalance(accountId, accountObj.Balance)
+	err = mutator.Repository.UpdateBalance(accountId, uint(balance))
 	if err != nil {
 		mutator.DBHelper.RollbackTransaction()
 		return err
