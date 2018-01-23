@@ -8,10 +8,28 @@ import (
 )
 
 var DBConn *sql.DB
+var TxConn *sql.Tx
 
 type Repository struct {}
 
-func (repository *Repository) getDB() (db *sql.DB) {
+func (repository *Repository) getTx() *sql.Tx {
+	if TxConn != nil {
+		return TxConn
+	}
+
+	var err error
+
+	db := repository.getDB()
+	TxConn, err = db.Begin()
+
+	if err != nil {
+		log.Fatal("Connect to database failed with error, ", err)
+	}
+
+	return TxConn
+}
+
+func (repository *Repository) getDB() *sql.DB {
 	if DBConn == nil {
 		var err error
 

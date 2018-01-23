@@ -48,11 +48,10 @@ func (repository *AccountRepository) GetByEmail(email string) (accountObj accoun
 }
 
 func (repository *AccountRepository) GetLockedForUpdateById(id uint) (accountObj account.Account, err error) {
-	db := repository.getDB()
+	tx := repository.getTx()
 	accountObj = account.Account{}
 
-	sqlErr := sq.Select("firstname, lastname, email, balance").From("accounts").Where(sq.Eq{"id": id}).
-		RunWith(db).QueryRow().
+	sqlErr := tx.QueryRow("SELECT firstname, lastname, email, balance FROM accounts where id = ? FOR UPDATE", id).
 		Scan(&accountObj.Firstname, &accountObj.Lastname, &accountObj.Email, &accountObj.Balance)
 
 	if sqlErr != nil {
@@ -67,11 +66,11 @@ func (repository *AccountRepository) GetLockedForUpdateById(id uint) (accountObj
 }
 
 func (repository *AccountRepository) UpdateBalance(id uint, balance uint) (err error) {
-	db := repository.getDB()
+	tx := repository.getTx()
 	_, err = sq.Update("accounts").Where(sq.Eq{"id": id}).
 		Set("balance", balance).
 		Set("updated_at", time.Now().Format("2006-01-02 15:04:05")).
-		RunWith(db).Exec()
+		RunWith(tx).Exec()
 
 	if err != nil {
 		err = &database.Error{Message: "There is a problem updating data"}
