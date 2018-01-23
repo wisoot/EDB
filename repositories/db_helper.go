@@ -12,10 +12,14 @@ func (dbHelper *DBHelper) BeginTransaction() error {
 
 func (dbHelper *DBHelper) CommitTransaction() error {
 	tx := dbHelper.getTx()
-	return tx.Commit()
+	err := tx.Commit()
+	dbHelper.clearTx()
+	return err
 }
 
 func (dbHelper *DBHelper) RollbackTransaction() error {
 	tx := dbHelper.getTx()
-	return tx.Rollback()
+	err := tx.Rollback()
+	dbHelper.clearTx()
+	return err
 }

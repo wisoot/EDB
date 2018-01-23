@@ -29,6 +29,10 @@ func (repository *Repository) getTx() *sql.Tx {
 	return TxConn
 }
 
+func (repository *Repository) clearTx() {
+	TxConn = nil
+}
+
 func (repository *Repository) getDB() *sql.DB {
 	if DBConn == nil {
 		var err error
