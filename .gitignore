@@ -27,3 +27,4 @@ Thumbs.db
 
 # Project vendor
 /vendor
+/_vendor*
