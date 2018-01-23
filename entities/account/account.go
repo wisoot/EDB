@@ -1,9 +1,9 @@
 package account
 
 type Account struct {
-	Id        int
+	Id        uint
 	Firstname string
 	Lastname  string
 	Email     string
-	Balance   int
+	Balance   uint
 }
